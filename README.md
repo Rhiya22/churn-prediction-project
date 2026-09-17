@@ -113,7 +113,7 @@ customer-churn-predictor/
 ├── app.py                  # Streamlit app: sidebar inputs -> prediction -> SHAP explanation
 ├── requirements.txt        # Pinned Python dependencies
 ├── .gitignore              # Ignores generated artifacts, data files, caches
-└── README.md               # Project documentation (this file)
+└── README.md               # Project documentation
 ```
 
 | File | Purpose |
