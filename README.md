@@ -123,15 +123,6 @@ customer-churn-predictor/
 | `explainability.py` | Loads the saved model, computes SHAP values on the test set, saves a summary bar plot, a beeswarm plot, and a waterfall plot for the highest-risk customer, and prints the top 5 features. |
 | `app.py` | A Streamlit UI for scoring a single customer profile interactively, with a colour-coded risk gauge and a SHAP waterfall explanation for that specific prediction. |
 
-## Screenshots
-
-*(Add screenshots of the running Streamlit app here, e.g. the input sidebar, the risk gauge, and the SHAP waterfall explanation.)*
-
-```
-docs/screenshot-input.png
-docs/screenshot-prediction.png
-docs/screenshot-shap.png
-```
 
 ## Author
 
