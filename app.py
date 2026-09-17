@@ -18,6 +18,8 @@ Run with:
 
 from __future__ import annotations
 
+import os
+
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,7 +33,7 @@ ENCODERS_PATH = "label_encoders.pkl"
 FEATURE_COLUMNS_PATH = "feature_columns.pkl"
 DEFAULT_VALUES_PATH = "default_values.pkl"
 
-GITHUB_URL = "http://github.com/Rhiya22"
+GITHUB_URL = "https://github.com/Rhiya22"
 
 LOW_RISK_THRESHOLD = 0.30
 HIGH_RISK_THRESHOLD = 0.70
@@ -51,9 +53,22 @@ st.set_page_config(
 def load_artifacts():
     """Load the trained model and supporting artifacts, cached across reruns.
 
-    Stops the app with a friendly message if `model_training.py` hasn't been
-    run yet (i.e. the artifacts don't exist).
+    If the model hasn't been trained yet in this environment (e.g. right
+    after a fresh deployment, where `model.pkl` isn't in the repo on
+    purpose - see .gitignore), this trains it on the fly so the app is
+    fully self-contained and never requires a manual
+    `python model_training.py` step before it can be used.
     """
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("First-time setup: training the model (only happens once per deployment)..."):
+            try:
+                from model_training import main as train_and_save_artifacts
+
+                train_and_save_artifacts()
+            except Exception as exc:  # noqa: BLE001
+                st.error(f"Automatic model training failed: {exc}")
+                st.stop()
+
     try:
         model = joblib.load(MODEL_PATH)
         encoders = joblib.load(ENCODERS_PATH)
@@ -62,8 +77,7 @@ def load_artifacts():
         return model, encoders, feature_columns, defaults
     except FileNotFoundError as exc:
         st.error(
-            "Model artifacts were not found. Please run:\n\n"
-            "```bash\npython model_training.py\n```\n\n"
+            "Model artifacts still weren't found after training. "
             f"Details: {exc}"
         )
         st.stop()
@@ -272,7 +286,8 @@ def main() -> None:
         st.markdown(f"<h2 style='color:{color};'>{label} — {probability:.1%}</h2>", unsafe_allow_html=True)
         st.write("Estimated churn risk based on the customer profile provided in the sidebar.")
         with st.expander("View input profile"):
-            st.dataframe(pd.DataFrame([user_inputs]).T.rename(columns={0: "Value"}), use_container_width=True)
+            profile_df = pd.DataFrame([user_inputs]).T.rename(columns={0: "Value"}).astype(str)
+            st.dataframe(profile_df, use_container_width=True)
 
     st.divider()
     st.markdown("### Why this prediction?")
