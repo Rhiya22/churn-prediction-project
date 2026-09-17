@@ -1,0 +1,40 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Trained model & pipeline artifacts (regenerate via the training scripts)
+model.pkl
+label_encoders.pkl
+feature_columns.pkl
+default_values.pkl
+
+# Data files
+*.csv
+
+# Generated SHAP explanation plots (regenerate via explainability.py)
+shap_summary_bar.png
+shap_beeswarm.png
+shap_waterfall_high_risk.png
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+Thumbs.db
